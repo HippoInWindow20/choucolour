@@ -35,7 +35,7 @@
             <tbody>
                 <tr>
                     <td style="text-align:left;">
-                        <p class="title">周逸調色盤</p>
+                        <p class="title" id="title" onclick="changeMode()">周逸調色盤</p>
                     </td>
                     <td style="text-align:right">
                         <button id="goFullscreen" title="全螢幕">
@@ -64,8 +64,8 @@
                 <tr style="height: 57vh">
                     <td>
                         <div id="preview" style="display: flex;justify-content: center;justify-items: center;">
-                            <div id="bg" data-fullscreen="false" class="templatebg" style="background: #0C88A1;">
-                                <img class="template" src="template.svg" onclick="info()" />
+                            <div id="bg" data-fullscreen="false" class="templatebg" style="background: #0C88A1;background-clip:content-box;">
+                                <img id="template" class="template" src="template.svg" onclick="info()" />
                             </div>
                         </div>
                     </td>
@@ -96,9 +96,24 @@
                         </div>
 
                     </td>
+                    <td id="imagebox" style="box-shadow:0px 2px 10px 1px #666;display: flex;justify-content: center;justify-items: center;height: 29vh;border-top-left-radius: 6vh;border-top-right-radius: 6vh;display: none;">
+                        <div id="imageInner" style="background:none;width:100%;display: flex;justify-content: center;justify-items: stretch;align-items: stretch;align-content: center;flex-wrap: wrap;">
+                            <div class="flexbox unconstrained">
+                                <button onclick="uploadFile()" class="upload" title="上傳圖片">
+                                    <span class="material-symbols-outlined" style="color: inherit" onclick="toggleFullscreen()">upload</span>
+                                    <span>上傳圖片</span>
+                                </button>
+                                <input type="file" accept="image/*" id="imgupload" style="display: none;" />
+                                <span style="font-size: 3vh;">所有照片將會在下次重整消失</span>
+                                <span style="font-size: 3vh;">不會儲存在任何地方，請放心使用</span>
+                            </div>
+                        </div>
+
+                    </td>
                 </tr>
             </tbody>
         </table>
+
         <table id="settings" class="settingsPanel">
             <tbody>
                 <tr>

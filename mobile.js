@@ -1,3 +1,5 @@
+var mode = "colour";
+
 function changeColour(colour, button) {
     document.getElementById("bg").style.background = colour;
     var colourButtons = document.getElementsByClassName("preset");
@@ -73,7 +75,11 @@ for (let i = 0; i < colourButtons.length; i++) {
 
 function info() {
     var colourOfChoice = document.getElementById("bg").style.background;
-    showAlert("目前顏色", colourOfChoice, "關閉");
+    if (mode == "colour") {
+        showAlert("目前顏色", colourOfChoice, "關閉");
+    } else {
+        showAlert("目前圖片", "自訂", "關閉");
+    }
 }
 
 function switchState(property) {
@@ -104,6 +110,7 @@ function toggleFullscreen() {
         document.getElementById("bg").childNodes[1].style.width = "90vw";
         setTimeout(function() {
             document.getElementById("colourbox").style.display = "none";
+            document.getElementById("imagebox").style.display = "none";
         }, 100);
         document.getElementById("exitFullscreen").style.display = null;
         document.getElementById("goFullscreen").style.display = "none";
@@ -113,7 +120,11 @@ function toggleFullscreen() {
         document.getElementById("bg").childNodes[1].style.height = "50vh";
         document.getElementById("bg").style.width = "35.5vh";
         document.getElementById("bg").childNodes[1].style.width = "35.5vh";
-        document.getElementById("colourbox").style.display = null;
+        if (mode == "colour") {
+            document.getElementById("colourbox").style.display = null;
+        } else {
+            document.getElementById("imagebox").style.display = null;
+        }
         document.getElementById("exitFullscreen").style.display = "none";
         document.getElementById("goFullscreen").style.display = null;
         document.getElementById("bg").dataset.fullscreen = "false";
@@ -185,4 +196,61 @@ if (document.cookie.length !== 0) {
     document.getElementById("picker4").value = getCookie("set4");
     document.getElementById("picker5").value = getCookie("set5");
     updateAll();
+}
+
+function changeMode() {
+    var title = document.getElementById("title").innerHTML;
+    if (title == "周逸調色盤") {
+        mode = "image";
+        toggleFullscreen();
+        document.getElementById("title").innerHTML = "周逸調底圖";
+        setTimeout(
+            function() {
+                document.getElementById("colourbox").style.display = "none";
+                document.getElementById("imagebox").style.display = null;
+                document.getElementById("template").src = "template_img.svg";
+                document.getElementById("bg").style.background = "linear-gradient(rgba(255,255,255,0.2), rgba(255,255,255,0.2)),url('ex.jpg')";
+                document.getElementById("bg").style.backgroundSize = "cover";
+                toggleFullscreen();
+            },
+            300
+        );
+    } else {
+        mode = "colour";
+        toggleFullscreen();
+        document.getElementById("title").innerHTML = "周逸調色盤";
+        setTimeout(
+            function() {
+                document.getElementById("colourbox").style.display = null;
+                document.getElementById("imagebox").style.display = "none";
+                document.getElementById("template").src = "template.svg";
+                document.getElementById("bg").style.background = "#0C88A1";
+                toggleFullscreen();
+            },
+            300
+        );
+    }
+}
+
+function readImage(file) {
+    if (file.type && !file.type.startsWith('image/')) {
+        console.log('File is not an image.', file.type, file);
+        return;
+    }
+
+    const reader = new FileReader();
+    reader.addEventListener('load', (event) => {
+        document.getElementById("bg").style.background = "linear-gradient(rgba(255,255,255,0.2), rgba(255,255,255,0.2)),url('" + event.target.result + "')";
+        document.getElementById("bg").style.backgroundSize = "cover";
+    });
+    reader.readAsDataURL(file);
+}
+
+function uploadFile() {
+    document.getElementById("imgupload").click();
+    const fileSelector = document.getElementById('imgupload');
+    fileSelector.addEventListener('change', (event) => {
+        const fileList = event.target.files;
+        readImage(fileList[0]);
+    });
 }
